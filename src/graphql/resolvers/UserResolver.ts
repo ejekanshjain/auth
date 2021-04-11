@@ -91,8 +91,7 @@ export class UserResolver {
     const userAgent = ctx.req.headers['user-agent']
     if (!userAgent) return
     const foundRefreshToken = await RefreshToken.findOne({ token })
-    if (!foundRefreshToken) return
-    if (!foundRefreshToken.isActive) return
+    if (!foundRefreshToken || !foundRefreshToken.isActive) return
     const user = await User.findOne({ id: foundRefreshToken.userId })
     if (!user) return
     if (!user.isActive) return
@@ -156,8 +155,7 @@ export class UserResolver {
     const token = ctx.req.signedCookies.refreshToken
     if (!token) return
     const foundRefreshToken = await RefreshToken.findOne({ token })
-    if (!foundRefreshToken) return
-    if (!foundRefreshToken.isActive) return
+    if (!foundRefreshToken || !foundRefreshToken.isActive) return
     const user = await User.findOne({ id: ctx.req.user.id })
     if (!user) return
     if (!(await bcrypt.compare(currentPassword, user.password))) return
