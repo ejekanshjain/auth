@@ -19,8 +19,8 @@ const generateToken = () => randomBytes(128).toString('base64')
 @Resolver()
 export class UserResolver {
   @Query(() => String)
-  async hello() {
-    return 'Hello, World!'
+  hello(): string {
+    return 'world'
   }
 
   @Mutation(() => User)

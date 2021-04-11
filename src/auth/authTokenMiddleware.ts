@@ -6,7 +6,7 @@ interface RequestWithAuthUser extends Request {
 }
 
 export const authTokenMiddleware = (secret: string): any => {
-  return (req: RequestWithAuthUser, res: Response, next: NextFunction) => {
+  return (req: RequestWithAuthUser, _res: Response, next: NextFunction) => {
     const token = req.headers['authorization']
     if (token) {
       try {
