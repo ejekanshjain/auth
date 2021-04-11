@@ -4,7 +4,7 @@
   "description": "Auth Service",
   "main": "build/server.js",
   "scripts": {
-    "start": "node build/server.js",
+    "start": "node .",
     "ts": "ts-node src/server.ts",
     "dev": "ts-node-dev src/server.ts",
     "dev:mon": "nodemon src/server.ts",
