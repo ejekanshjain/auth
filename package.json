@@ -2,11 +2,14 @@
   "name": "auth",
   "version": "1.0.0",
   "description": "Auth Service",
-  "main": "src/server.ts",
+  "main": "build/server.js",
   "scripts": {
-    "start": "ts-node src/server.ts",
+    "start": "node build/server.js",
+    "ts": "ts-node src/server.ts",
     "dev": "ts-node-dev src/server.ts",
     "dev:mon": "nodemon src/server.ts",
+    "clean": "rimraf build",
+    "build": "tsc",
     "test": "echo \"No test to run\" && exit 0"
   },
   "repository": {
@@ -31,6 +34,7 @@
     "@types/uuid": "^8.3.0",
     "eslint": "^7.24.0",
     "nodemon": "^2.0.7",
+    "rimraf": "^3.0.2",
     "ts-node": "^9.1.1",
     "ts-node-dev": "^1.1.6",
     "typescript": "^4.2.4"
