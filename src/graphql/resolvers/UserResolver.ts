@@ -1,10 +1,7 @@
 import { Arg, Authorized, Ctx, Mutation, Query, Resolver } from 'type-graphql'
 import bcrypt from 'bcryptjs'
-import { sign } from 'jsonwebtoken'
-import { randomBytes } from 'crypto'
 import { Not } from 'typeorm'
 
-import { ACCESS_TOKEN_EXPIRE_TIME, JWT_ACCESS_SECRET } from '../../config'
 import { User } from '../../entity/User'
 import { RefreshToken } from '../../entity/RefreshToken'
 import { SignUpInput } from '../types/SignUpInput'
@@ -13,8 +10,8 @@ import { AuthenticatedResponse } from '../types/AuthenticatedResponse'
 import { sendRefreshToken } from '../../functions/sendRefreshToken'
 import { UpdateMeInput } from '../types/UpdateMeInput'
 import { UpdatePasswordInput } from '../types/UpdatePasswordInput'
-
-const generateToken = () => randomBytes(128).toString('base64')
+import { googleAuthClient } from '../../auth/googleAuthClient'
+import { generateTokens } from '../../functions/generateTokens'
 
 @Resolver()
 export class UserResolver {
@@ -50,18 +47,9 @@ export class UserResolver {
     const user = await User.findOne({ email })
     if (!user || !user.isActive) return
     if (!(await bcrypt.compare(password, user.password))) return
-    const iat = Math.floor(Date.now() / 1000)
-    const exp = Math.floor(Date.now() / 1000) + ACCESS_TOKEN_EXPIRE_TIME
-    const accessToken = sign(
-      {
-        id: user.id,
-        role: user.role,
-        iat,
-        exp
-      },
-      JWT_ACCESS_SECRET
+    const { accessToken, refreshToken, issuedAt, expiresAt } = generateTokens(
+      user
     )
-    const refreshToken = generateToken()
     await RefreshToken.create({
       token: refreshToken,
       userId: user.id,
@@ -71,8 +59,8 @@ export class UserResolver {
     return {
       userId: user.id,
       accessToken,
-      issuedAt: iat,
-      expiresAt: exp
+      issuedAt,
+      expiresAt
     }
   }
 
@@ -95,18 +83,9 @@ export class UserResolver {
     const user = await User.findOne({ id: foundRefreshToken.userId })
     if (!user) return
     if (!user.isActive) return
-    const iat = Math.floor(Date.now() / 1000)
-    const exp = Math.floor(Date.now() / 1000) + ACCESS_TOKEN_EXPIRE_TIME
-    const accessToken = sign(
-      {
-        id: user.id,
-        role: user.role,
-        iat,
-        exp
-      },
-      JWT_ACCESS_SECRET
+    const { accessToken, refreshToken, issuedAt, expiresAt } = generateTokens(
+      user
     )
-    const refreshToken = generateToken()
     foundRefreshToken.token = refreshToken
     foundRefreshToken.userAgent = userAgent
     await foundRefreshToken.save()
@@ -114,8 +93,8 @@ export class UserResolver {
     return {
       userId: user.id,
       accessToken,
-      issuedAt: iat,
-      expiresAt: exp
+      issuedAt,
+      expiresAt
     }
   }
 
@@ -193,5 +172,50 @@ export class UserResolver {
       { isActive: false }
     )
     return 'session removed'
+  }
+
+  @Mutation(() => AuthenticatedResponse, { nullable: true })
+  async googleSignIn(
+    @Arg('idToken') idToken: string,
+    @Ctx() ctx: any
+  ): Promise<AuthenticatedResponse | undefined> {
+    const userAgent = ctx.req.headers['user-agent']
+    if (!userAgent) return
+    let payload: any
+    try {
+      const data = await googleAuthClient.verifyIdToken({ idToken })
+      payload = data.getPayload()
+    } catch (err) {
+      return
+    }
+    if (!payload) return
+    const {
+      sub: googleId,
+      email,
+      email_verified: emailVerified,
+      name
+    } = payload
+    if (!googleId || !email || !emailVerified || !name) return
+    const user = await User.findOne({ email })
+    if (!user || !user.isActive) return
+    if (!user.googleId) {
+      user.googleId = googleId
+      await user.save()
+    } else if (user.googleId !== googleId) return
+    const { accessToken, refreshToken, issuedAt, expiresAt } = generateTokens(
+      user
+    )
+    await RefreshToken.create({
+      token: refreshToken,
+      userId: user.id,
+      userAgent
+    }).save()
+    sendRefreshToken(ctx.res, refreshToken)
+    return {
+      userId: user.id,
+      accessToken,
+      issuedAt,
+      expiresAt
+    }
   }
 }

@@ -34,6 +34,13 @@ export class User extends BaseEntity {
   })
   isActive: boolean
 
+  @Column({
+    type: 'varchar',
+    length: 2047,
+    nullable: true
+  })
+  googleId?: string
+
   @Field()
   @Column()
   firstName: string
@@ -53,10 +60,11 @@ export class User extends BaseEntity {
 
   @Field({ nullable: true })
   @Column({
+    type: 'varchar',
     length: 2047,
     nullable: true
   })
-  profileImage: string
+  profileImage?: string
 
   @Field()
   @CreateDateColumn({

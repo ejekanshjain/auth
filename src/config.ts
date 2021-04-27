@@ -21,6 +21,12 @@ const CORS_ORIGINS: string[] = process.env.CORS_ORIGINS
   ? process.env.CORS_ORIGINS.split(',')
   : ['*']
 
+const GOOGLE_OAUTH2_CLIENT_ID: string =
+  process.env.GOOGLE_OAUTH2_CLIENT_ID || 'google_client_id'
+
+const GOOGLE_OAUTH2_CLIENT_SECRET: string =
+  process.env.GOOGLE_OAUTH2_CLIENT_SECRET || 'google_client_secret'
+
 export {
   NODE_ENV,
   PORT,
@@ -28,5 +34,7 @@ export {
   ACCESS_TOKEN_EXPIRE_TIME,
   COOKIE_SECRET,
   SECURE_COOKIE,
-  CORS_ORIGINS
+  CORS_ORIGINS,
+  GOOGLE_OAUTH2_CLIENT_ID,
+  GOOGLE_OAUTH2_CLIENT_SECRET
 }
