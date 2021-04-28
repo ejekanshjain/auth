@@ -8,7 +8,7 @@ import cookieParser from 'cookie-parser'
 
 import {
   COOKIE_SECRET,
-  CORS_ORIGINS,
+  CORS_ORIGIN,
   JWT_ACCESS_SECRET,
   NODE_ENV,
   PORT
@@ -38,7 +38,7 @@ const main = async () => {
 
   app.use(
     cors({
-      origin: CORS_ORIGINS,
+      origin: CORS_ORIGIN,
       credentials: true
     })
   )

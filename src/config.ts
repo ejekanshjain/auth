@@ -17,9 +17,7 @@ const COOKIE_SECRET: string = process.env.COOKIE_SECRET || 'cookie_secret'
 
 const SECURE_COOKIE: boolean = process.env.SECURE_COOKIE === 'true'
 
-const CORS_ORIGINS: string[] = process.env.CORS_ORIGINS
-  ? process.env.CORS_ORIGINS.split(',')
-  : ['*']
+const CORS_ORIGIN: string = process.env.CORS_ORIGIN || '*'
 
 const GOOGLE_OAUTH2_CLIENT_ID: string =
   process.env.GOOGLE_OAUTH2_CLIENT_ID || 'google_client_id'
@@ -34,7 +32,7 @@ export {
   ACCESS_TOKEN_EXPIRE_TIME,
   COOKIE_SECRET,
   SECURE_COOKIE,
-  CORS_ORIGINS,
+  CORS_ORIGIN,
   GOOGLE_OAUTH2_CLIENT_ID,
   GOOGLE_OAUTH2_CLIENT_SECRET
 }
