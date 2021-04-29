@@ -98,7 +98,7 @@ export class UserResolver {
     }
   }
 
-  @Query(() => String)
+  @Mutation(() => String)
   async signOut(@Ctx() ctx: any): Promise<string> {
     const token = ctx.req.signedCookies.refreshToken
     if (!token) return 'sign out successful'
