@@ -6,6 +6,26 @@ const NODE_ENV: string = process.env.NODE_ENV || 'development'
 
 const PORT: number = process.env.PORT ? parseInt(process.env.PORT) : 4000
 
+const DB_POSTGRES_HOST: string = process.env.DB_POSTGRES_HOST || 'localhost'
+
+const DB_POSTGRES_PORT: number = process.env.DB_POSTGRES_PORT
+  ? parseInt(process.env.DB_POSTGRES_PORT)
+  : 5432
+
+const DB_POSTGRES_USERNAME: string =
+  process.env.DB_POSTGRES_USERNAME || 'postgres'
+
+const DB_POSTGRES_PASSWORD: string =
+  process.env.DB_POSTGRES_PASSWORD || 'postgres'
+
+const DB_POSTGRES_DATABASE: string =
+  process.env.DB_POSTGRES_DATABASE || 'typescript-graphql-api'
+
+const DB_POSTGRES_SYNCHRONIZE: boolean =
+  process.env.DB_POSTGRES_SYNCHRONIZE === 'true'
+
+const DB_POSTGRES_LOGGING: boolean = process.env.DB_POSTGRES_LOGGING === 'true'
+
 const JWT_ACCESS_SECRET: string =
   process.env.JWT_ACCESS_SECRET || 'access_secret'
 
@@ -28,6 +48,13 @@ const GOOGLE_OAUTH2_CLIENT_SECRET: string =
 export {
   NODE_ENV,
   PORT,
+  DB_POSTGRES_HOST,
+  DB_POSTGRES_PORT,
+  DB_POSTGRES_USERNAME,
+  DB_POSTGRES_PASSWORD,
+  DB_POSTGRES_DATABASE,
+  DB_POSTGRES_SYNCHRONIZE,
+  DB_POSTGRES_LOGGING,
   JWT_ACCESS_SECRET,
   ACCESS_TOKEN_EXPIRE_TIME,
   COOKIE_SECRET,

@@ -11,7 +11,14 @@ import {
   CORS_ORIGIN,
   JWT_ACCESS_SECRET,
   NODE_ENV,
-  PORT
+  PORT,
+  DB_POSTGRES_HOST,
+  DB_POSTGRES_PORT,
+  DB_POSTGRES_USERNAME,
+  DB_POSTGRES_PASSWORD,
+  DB_POSTGRES_DATABASE,
+  DB_POSTGRES_SYNCHRONIZE,
+  DB_POSTGRES_LOGGING
 } from './config'
 import { UserResolver } from './graphql/resolvers/UserResolver'
 import { authChecker } from './auth/authChecker'
@@ -20,7 +27,19 @@ import { authTokenMiddleware } from './auth/authTokenMiddleware'
 const main = async () => {
   console.log('Starting server up...')
 
-  await createConnection()
+  await createConnection({
+    type: 'postgres',
+    host: DB_POSTGRES_HOST,
+    port: DB_POSTGRES_PORT,
+    username: DB_POSTGRES_USERNAME,
+    password: DB_POSTGRES_PASSWORD,
+    database: DB_POSTGRES_DATABASE,
+    synchronize: DB_POSTGRES_SYNCHRONIZE,
+    logging: DB_POSTGRES_LOGGING,
+    entities: ['build/entity/**/*.js'],
+    migrations: ['build/migration/**/*.js'],
+    subscribers: ['build/subscriber/**/*.js']
+  })
   console.log('Connected to DB...')
 
   const schema = await buildSchema({
