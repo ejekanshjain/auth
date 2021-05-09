@@ -1,1 +1,1 @@
-# auth
+# typescript-graphql-api
