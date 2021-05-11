@@ -1,7 +1,6 @@
 import { Arg, Authorized, Ctx, Mutation, Query, Resolver } from 'type-graphql'
 import bcrypt from 'bcryptjs'
 import { Not } from 'typeorm'
-
 import { User } from '../../entity/User'
 import { RefreshToken } from '../../entity/RefreshToken'
 import { SignUpInput } from '../types/SignUpInput'

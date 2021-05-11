@@ -1,5 +1,4 @@
 import { Response } from 'express'
-
 import { SECURE_COOKIE } from '../config'
 
 export const sendRefreshToken = (res: Response, refreshToken: string) => {

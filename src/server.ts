@@ -5,7 +5,6 @@ import { buildSchema } from 'type-graphql'
 import { createConnection } from 'typeorm'
 import cors from 'cors'
 import cookieParser from 'cookie-parser'
-
 import {
   COOKIE_SECRET,
   CORS_ORIGIN,

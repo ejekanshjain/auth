@@ -1,6 +1,5 @@
 import { IsEmail, IsIn, Length, Matches } from 'class-validator'
 import { Field, InputType } from 'type-graphql'
-
 import { IsEmailAlreadyExist } from '../../validators/isEmailAlreadyExist'
 
 @InputType()

@@ -1,6 +1,5 @@
 import { randomBytes } from 'crypto'
 import { sign } from 'jsonwebtoken'
-
 import { ACCESS_TOKEN_EXPIRE_TIME, JWT_ACCESS_SECRET } from '../config'
 import { User } from '../entity/User'
 

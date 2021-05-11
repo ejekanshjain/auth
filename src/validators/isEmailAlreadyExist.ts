@@ -4,7 +4,6 @@ import {
   ValidatorConstraint,
   ValidatorConstraintInterface
 } from 'class-validator'
-
 import { User } from '../entity/User'
 
 @ValidatorConstraint({ async: true })
