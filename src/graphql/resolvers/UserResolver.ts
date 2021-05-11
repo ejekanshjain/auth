@@ -58,6 +58,11 @@ export class UserResolver {
     sendRefreshToken(ctx.res, refreshToken)
     return {
       userId: user.id,
+      role: user.role,
+      email: user.email,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      profileImage: user.profileImage,
       accessToken,
       issuedAt,
       expiresAt
@@ -92,6 +97,11 @@ export class UserResolver {
     sendRefreshToken(ctx.res, refreshToken)
     return {
       userId: user.id,
+      role: user.role,
+      email: user.email,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      profileImage: user.profileImage,
       accessToken,
       issuedAt,
       expiresAt
@@ -213,6 +223,11 @@ export class UserResolver {
     sendRefreshToken(ctx.res, refreshToken)
     return {
       userId: user.id,
+      role: user.role,
+      email: user.email,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      profileImage: user.profileImage,
       accessToken,
       issuedAt,
       expiresAt
