@@ -20,7 +20,7 @@ export class RefreshToken extends BaseEntity {
   })
   token: string
 
-  @Field(() => ID)
+  @Field()
   @Column()
   userId: string
 
