@@ -43,12 +43,11 @@ export class UserResolver {
   ): Promise<AuthenticatedResponse | undefined> {
     const userAgent = ctx.req.headers['user-agent']
     if (!userAgent) return
-    const user = await User.findOne({ email })
+    const user = await User.findOne({ where: { email } })
     if (!user || !user.isActive) return
     if (!(await bcrypt.compare(password, user.password))) return
-    const { accessToken, refreshToken, issuedAt, expiresAt } = generateTokens(
-      user
-    )
+    const { accessToken, refreshToken, issuedAt, expiresAt } =
+      generateTokens(user)
     await RefreshToken.create({
       token: refreshToken,
       userId: user.id,
@@ -71,7 +70,7 @@ export class UserResolver {
   @Authorized()
   @Query(() => User, { nullable: true })
   async me(@Ctx() ctx: any): Promise<User | undefined> {
-    return await User.findOne({ id: ctx.req.user.id })
+    return await User.findOne({ where: { id: ctx.req.user.id } })
   }
 
   @Query(() => AuthenticatedResponse, { nullable: true })
@@ -82,14 +81,13 @@ export class UserResolver {
     if (!token) return
     const userAgent = ctx.req.headers['user-agent']
     if (!userAgent) return
-    const foundRefreshToken = await RefreshToken.findOne({ token })
+    const foundRefreshToken = await RefreshToken.findOne({ where: { token } })
     if (!foundRefreshToken || !foundRefreshToken.isActive) return
-    const user = await User.findOne({ id: foundRefreshToken.userId })
+    const user = await User.findOne({ where: { id: foundRefreshToken.userId } })
     if (!user) return
     if (!user.isActive) return
-    const { accessToken, refreshToken, issuedAt, expiresAt } = generateTokens(
-      user
-    )
+    const { accessToken, refreshToken, issuedAt, expiresAt } =
+      generateTokens(user)
     foundRefreshToken.token = refreshToken
     foundRefreshToken.userAgent = userAgent
     await foundRefreshToken.save()
@@ -124,7 +122,7 @@ export class UserResolver {
     @Ctx()
     ctx: any
   ): Promise<User | undefined> {
-    const user = await User.findOne({ id: ctx.req.user.id })
+    const user = await User.findOne({ where: { id: ctx.req.user.id } })
     if (!user) return
     if (firstName) user.firstName = firstName
     if (lastName) user.lastName = lastName
@@ -142,9 +140,9 @@ export class UserResolver {
   ): Promise<string | undefined> {
     const token = ctx.req.signedCookies.refreshToken
     if (!token) return
-    const foundRefreshToken = await RefreshToken.findOne({ token })
+    const foundRefreshToken = await RefreshToken.findOne({ where: { token } })
     if (!foundRefreshToken || !foundRefreshToken.isActive) return
-    const user = await User.findOne({ id: ctx.req.user.id })
+    const user = await User.findOne({ where: { id: ctx.req.user.id } })
     if (!user) return
     if (!(await bcrypt.compare(currentPassword, user.password))) return
     user.password = await bcrypt.hash(newPassword, 10)
@@ -205,15 +203,14 @@ export class UserResolver {
       name
     } = payload
     if (!googleId || !email || !emailVerified || !name) return
-    const user = await User.findOne({ email })
+    const user = await User.findOne({ where: { email } })
     if (!user || !user.isActive) return
     if (!user.googleId) {
       user.googleId = googleId
       await user.save()
     } else if (user.googleId !== googleId) return
-    const { accessToken, refreshToken, issuedAt, expiresAt } = generateTokens(
-      user
-    )
+    const { accessToken, refreshToken, issuedAt, expiresAt } =
+      generateTokens(user)
     await RefreshToken.create({
       token: refreshToken,
       userId: user.id,
