@@ -6,6 +6,7 @@ export const sendRefreshToken = (res: Response, refreshToken: string) => {
     httpOnly: true,
     secure: SECURE_COOKIE,
     signed: true,
-    sameSite: 'none'
+    sameSite: 'none',
+    maxAge: 2592000000
   })
 }
